@@ -8,20 +8,25 @@
 import UIKit
 import AVFoundation
 import CoreImage
-
+import AVKit
 class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     var  rpm: String?
     public var frame: CGImage?
     private let context = CIContext()
     private var bufferView:UIImageView = UIImageView()
+    public var tmpOutputURL: URL?
     
+    var player = AVPlayer()
+    var playerViewController = AVPlayerViewController()
+    var RPMlabel = UILabel()
     @IBOutlet weak var txtFieldIso: UITextField!
     
     @IBOutlet weak var txtFieldShutterSpeed: UITextField!
     // 640h 345w
     @IBOutlet weak var viewCameraPreview : UIView!
     
-    @IBOutlet weak var bufferPreview: UIView!
+    //@IBOutlet weak var bufferPreview: UIView!
+    @IBOutlet weak var onlyrecord: UIButton!
     @IBOutlet weak var recordButton: UIButton!
     //@IBOutlet weak var recordButtonBorder: UIButton!
     //record on off
@@ -33,6 +38,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     var maxRate: AVFrameRateRange?
     //videoPicker
     var videoPicker: VideoPicker!
+    
+    var screenRect: CGRect! = nil // screen size
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -40,9 +48,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         //recordButtonBorder.layer.cornerRadius = 100
         //recordButtonBorder.layer.borderWidth = 10
         //recordButtonBorder.layer.borderColor = UIColor.white.cgColor
-        recordButton.frame.size = CGSize(width: 15.0, height: 15.0)
+        /*recordButton.frame.size = CGSize(width: 15.0, height: 15.0)
         recordButton.setImage(UIImage(named: "record_state_off"), for: .normal)
-        recordButton.setImage(UIImage(named: "record_state_on"), for: .selected)
+        recordButton.setImage(UIImage(named: "record_state_on"), for: .selected)*/
         //recordButton.imageView?.contentMode = UIView.ContentMode.scaleAspectFit
         // 按空白處使鍵盤消失
         txtFieldIso.delegate = self
@@ -76,14 +84,21 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     func settingPreviewLayer() {
         let previewLayer = AVCaptureVideoPreviewLayer()
-        previewLayer.frame = viewCameraPreview.bounds
+        //full screen
+        screenRect = UIScreen.main.bounds
+        previewLayer.frame = CGRect(x: 0, y: 0, width: screenRect.size.width, height: screenRect.size.height)
+        //previewLayer.frame = viewCameraPreview.bounds
+        
         previewLayer.session = session
         previewLayer.videoGravity = .resizeAspectFill
+        viewCameraPreview.frame = CGRect(x: 0, y: 0, width: screenRect.size.width, height: screenRect.size.height)
         viewCameraPreview.layer.addSublayer(previewLayer)
-        
+        //move  view to  back
+        //viewCameraPreview.sendSubviewToBack(onlyrecord)
+        self.view.sendSubviewToBack(viewCameraPreview)
         
         bufferView.contentMode = UIView.ContentMode.scaleAspectFit
-        bufferPreview.addSubview(bufferView)
+        //bufferPreview.addSubview(bufferView)
         
     }
     
@@ -185,13 +200,20 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
     }*/
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFileURL.path){
-            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(completion(_:error:contextInfo:)),nil )}    }
+        if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFileURL.path) {
+            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(completion(_:error:contextInfo:)), nil)
+        }
+        self.tmpOutputURL = outputFileURL
+        print("file ouput url: \(outputFileURL.absoluteString)")
+        videoPicker.jsonPost(videoPath: outputFileURL)
+    }
     
     @objc func completion(_ videoPath: String, error:Error?, contextInfo: Any?){
         do{
-            let fm = FileManager.default
-            try fm.removeItem(atPath: videoPath)
+            print("file ouput url2: \(videoPath)")
+            
+            //let fm = FileManager.default
+            //try fm.removeItem(atPath: videoPath)
         } catch {
             print(error)
         }
@@ -207,7 +229,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         let url = URL(fileURLWithPath: NSTemporaryDirectory() + "output.mov")
         let output = session.outputs.first! as! AVCaptureMovieFileOutput
         output.startRecording(to: url, recordingDelegate: self)
-        
+        let seconds = 2.5
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+            // Put your code which should be executed with a delay here
+            output.stopRecording()
+        }
     }
     
     @IBAction func stopRecordButton(_ sender: Any) {
@@ -220,7 +246,56 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         resultVC.rpm = self.videoPicker.RPM
     }
     
+    
+    func focalSetting(touchX:CGFloat, touchY:CGFloat) {
+        let input = session.inputs.last as! AVCaptureDeviceInput
+        if input.device.deviceType == .builtInMicrophone {
+            return
+        }
+        
+        do {
+            let camera = input.device
+            
+            try camera.lockForConfiguration()
+            //焦距
+            if camera.isFocusModeSupported(.continuousAutoFocus) {
+                camera.focusPointOfInterest = CGPoint(x: touchX, y: touchY)
+                camera.focusMode = .continuousAutoFocus
+            }
+            camera.unlockForConfiguration()
+        } catch {
+            print(error)
+        }
+    }
+    
+    @IBAction func replayVideo(_ sender: UIButton) {
+        playVideo(videoPath: self.videoPicker.VIDEOURL, rpm: self.videoPicker.RPM)
+        
+    }
+
+    
+    func playVideo(videoPath: URL? , rpm: String?){
+        if videoPath == nil {
+            print("videoPath is nil")
+            return
+        }
+        RPMlabel.lineBreakMode = NSLineBreakMode.byWordWrapping
+        let unwrappedRPM = rpm ?? "none"
+        RPMlabel.text = "RPM \(unwrappedRPM)"
+        RPMlabel.textColor = UIColor.white
+        RPMlabel.frame = CGRect(x: 20, y:200, width: RPMlabel.frame.size.width, height: RPMlabel.frame.size.height)
+        RPMlabel.sizeToFit()
+        player = AVPlayer(url: videoPath!)
+        playerViewController.player = player
+        playerViewController.contentOverlayView!.addSubview(RPMlabel)
+        self.present(playerViewController, animated: true)
+            /*{
+                player.play()
+            }*/
+    }    // error
+    
 }
+    
 /*
 extension ViewController: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
@@ -260,6 +335,12 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 }
 extension ViewController: UITextFieldDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first!
+        let location = touch.location(in: self.view)
+        let touchX = location.x / self.view.frame.width
+        let touchY = location.y / self.view.frame.height 
+        focalSetting(touchX: touchX, touchY: touchY) // set focal 0-1
+        print("began\(location)")
         self.view.endEditing(true)
     }
     

@@ -16,6 +16,7 @@
 		8478533028CE240D007B514C /* DeviceInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8478532F28CE240D007B514C /* DeviceInput.swift */; };
 		8478533228D34C3F007B514C /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8478533128D34C3F007B514C /* VideoPicker.swift */; };
 		8486FB0328EC75E100727B8D /* ServerResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486FB0228EC75E100727B8D /* ServerResultViewController.swift */; };
+		848BDCB729096DE900814FAC /* FileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848BDCB629096DE900814FAC /* FileHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		8478532F28CE240D007B514C /* DeviceInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInput.swift; sourceTree = "<group>"; };
 		8478533128D34C3F007B514C /* VideoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPicker.swift; sourceTree = "<group>"; };
 		8486FB0228EC75E100727B8D /* ServerResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResultViewController.swift; sourceTree = "<group>"; };
+		848BDCB629096DE900814FAC /* FileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				8478532F28CE240D007B514C /* DeviceInput.swift */,
 				8478531D28CE0FF6007B514C /* SceneDelegate.swift */,
 				8478533128D34C3F007B514C /* VideoPicker.swift */,
+				848BDCB629096DE900814FAC /* FileHandler.swift */,
 				8478531F28CE0FF6007B514C /* ViewController.swift */,
 				8478532428CE0FF8007B514C /* Assets.xcassets */,
 				8478532628CE0FF8007B514C /* LaunchScreen.storyboard */,
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8486FB0328EC75E100727B8D /* ServerResultViewController.swift in Sources */,
+				848BDCB729096DE900814FAC /* FileHandler.swift in Sources */,
 				8478533028CE240D007B514C /* DeviceInput.swift in Sources */,
 				8478532028CE0FF6007B514C /* ViewController.swift in Sources */,
 				8478533228D34C3F007B514C /* VideoPicker.swift in Sources */,

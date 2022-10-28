@@ -11,12 +11,18 @@ import FoundationNetworking
 #endif
 import AVFoundation
 import UIKit
+import AVKit
 open class VideoPicker: NSObject {
 
     public var RPM: String?
+    public var VIDEOURL: URL?
     private let pickerController: UIImagePickerController
     private weak var presentationController: UIViewController?
-
+    var player = AVPlayer()
+    var playerViewController = AVPlayerViewController()
+    
+    var label = UILabel()
+    var fileHandler = FileHandler()
     public init(presentationController: UIViewController) {
         self.pickerController = UIImagePickerController()
 
@@ -28,6 +34,12 @@ open class VideoPicker: NSObject {
         self.pickerController.mediaTypes = ["public.movie"]
         self.pickerController.videoQuality = .typeHigh
         self.pickerController.videoExportPreset = AVAssetExportPresetPassthrough
+        
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        label.text = "RPM/n1234"
+        label.textColor = UIColor.white
+        label.frame = CGRect(x: 20, y:200, width: label.frame.size.width, height: label.frame.size.height)
+        label.sizeToFit()
         
     }
     
@@ -47,6 +59,11 @@ open class VideoPicker: NSObject {
     
     struct rpmData: Codable {
         let RPM: Int
+        let video_data: String
+    }
+    
+    struct videoData: Codable {
+        let video_data: String
     }
     
     //can use
@@ -55,7 +72,7 @@ open class VideoPicker: NSObject {
             print("videoPath is nil")
             return
         }
-        let url = URL(string: "http://36.235.155.187:8000 /upload")
+        let url = URL(string: "http://36.235.131.131:8000/spinrate")
         var request = URLRequest(
             url: url!,
             cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -82,14 +99,26 @@ open class VideoPicker: NSObject {
         //print(movieData?.base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0)).count)
         let data = try? encoder.encode(body)
         request.httpBody = data
+        // remove tmp mov file
+        do{
+            print("file tmp remove: \(videoPath!.absoluteString)")
+            
+            let fm = FileManager.default
+            try fm.removeItem(atPath: videoPath!.absoluteString)
+        } catch {
+            print(error)
+        }
+        //====================//
         let task = URLSession.shared.dataTask(with: request) { (data, response,error) in
             if let data = data {
                 //let html = String(data: data, encoding: .utf8)
                 let decoder = JSONDecoder()
                 do {
                     let meme = try decoder.decode(rpmData.self, from: data)
-                    print(meme)
+                    //print("meme\(meme)")
                     self.RPM = String(meme.RPM)
+                    print("base64 len\(meme.video_data.count)")
+                    self.fileHandler.saveFile(base64String: meme.video_data)
                 } catch {
                     print(error)
                 }
@@ -100,8 +129,7 @@ open class VideoPicker: NSObject {
         }
         task.resume()
     }
-    
-    // error
+
     func testPostv2(videoPath: URL?) {
         if videoPath == nil {
             print("videoPath is nil")
@@ -185,6 +213,7 @@ extension VideoPicker: UIImagePickerControllerDelegate {
             return self.didSelectVideo(picker, didSelect: nil)
         }
         self.didSelectVideo(picker, didSelect: url)
+        self.VIDEOURL = url
         print("video path: \(url)")
         // uploadMedia(videoPath: url)
         jsonPost(videoPath: url)

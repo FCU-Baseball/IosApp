@@ -65,26 +65,6 @@
                                     <action selector="showImagePicker:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nYu-Hi-bvG"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G8f-Kp-BdZ">
-                                <rect key="frame" x="52" y="514" width="300" height="300"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="lhJ-vN-K2V"/>
-                                    <constraint firstAttribute="height" constant="300" id="xXH-LE-GPy"/>
-                                </constraints>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OyM-i0-UYY">
-                                <rect key="frame" x="175" y="822" width="65" height="51"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="51" id="Ht1-OE-OBR"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" cornerStyle="capsule"/>
-                                <connections>
-                                    <action selector="recording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ORe-BN-txc"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8gy-SM-oea">
                                 <rect key="frame" x="91" y="133" width="107" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -114,41 +94,44 @@
                                     <action selector="stopRecordButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mbQ-fb-xZd"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4LQ-Vc-moH">
-                                <rect key="frame" x="34.5" y="180" width="345" height="300"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1MK-Yq-VEW">
+                                <rect key="frame" x="87" y="384" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="TmN-bl-Njg"/>
-                                    <constraint firstAttribute="width" constant="345" id="a65-2f-Ywd"/>
-                                </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NGY-tz-keT">
+                                <rect key="frame" x="242" y="180" width="104" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="104" id="jC3-Q7-FIy"/>
+                                    <constraint firstAttribute="height" constant="31" id="oPw-sI-fC8"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="ReplayVideo"/>
+                                <connections>
+                                    <action selector="replayVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="r3s-LW-sRI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Zv2-eY-iCA" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-340" id="3Th-fE-VjF"/>
-                            <constraint firstItem="G8f-Kp-BdZ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="216" id="AIJ-XZ-h29"/>
-                            <constraint firstItem="OyM-i0-UYY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="175" id="Eeb-L2-lAH"/>
                             <constraint firstItem="LwG-ct-Ixn" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-296" id="GUI-3G-kO6"/>
-                            <constraint firstItem="OyM-i0-UYY" firstAttribute="centerX" secondItem="Zv2-eY-iCA" secondAttribute="centerX" id="Hp7-ZA-0M0"/>
-                            <constraint firstItem="4LQ-Vc-moH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="O9c-fb-i4R"/>
                             <constraint firstItem="JWC-Cp-iNV" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="339.5" id="Otc-Dk-Kxd"/>
-                            <constraint firstItem="4LQ-Vc-moH" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-118" id="Rwx-G7-ju6"/>
+                            <constraint firstItem="NGY-tz-keT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="87" id="TTn-Am-RtH"/>
                             <constraint firstItem="3bh-eu-ced" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="339.5" id="Yrr-YV-Toa"/>
-                            <constraint firstItem="OyM-i0-UYY" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="cZw-nC-Cwi"/>
-                            <constraint firstItem="G8f-Kp-BdZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-5" id="eUj-Yl-PDj"/>
                             <constraint firstItem="Zv2-eY-iCA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="h3i-7z-v7J"/>
                             <constraint firstItem="LwG-ct-Ixn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="111.5" id="mwc-uw-zT9"/>
                             <constraint firstItem="JWC-Cp-iNV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-127.5" id="prT-yJ-RM3"/>
                             <constraint firstItem="3bh-eu-ced" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="100" id="q1o-8T-UN2"/>
+                            <constraint firstItem="NGY-tz-keT" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-252.5" id="szA-ab-qpP"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="bufferPreview" destination="G8f-Kp-BdZ" id="o7P-II-4Xd"/>
-                        <outlet property="recordButton" destination="OyM-i0-UYY" id="b9T-Xa-s0F"/>
+                        <outlet property="onlyrecord" destination="3bh-eu-ced" id="tSZ-6d-EQg"/>
                         <outlet property="txtFieldIso" destination="1cH-Bo-Rm6" id="K6M-sc-w9l"/>
                         <outlet property="txtFieldShutterSpeed" destination="Xye-UW-R08" id="XSX-Jd-wuT"/>
-                        <outlet property="viewCameraPreview" destination="4LQ-Vc-moH" id="FKU-XI-UAk"/>
+                        <outlet property="viewCameraPreview" destination="1MK-Yq-VEW" id="VSm-D6-nue"/>
                         <segue destination="rgN-q1-R2N" kind="show" identifier="toServerResult" id="PIh-aw-rBz"/>
                     </connections>
                 </viewController>
