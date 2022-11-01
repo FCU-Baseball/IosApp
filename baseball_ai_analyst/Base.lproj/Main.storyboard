@@ -74,8 +74,9 @@
                                     <action selector="toServerResult:" destination="BYZ-38-t0r" eventType="touchUpInside" id="y8a-Ym-b2r"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3bh-eu-ced">
+                            <button opaque="NO" alpha="0.55000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3bh-eu-ced">
                                 <rect key="frame" x="272" y="772" width="70" height="31"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="h1f-k4-duG"/>
                                     <constraint firstAttribute="height" constant="31" id="kOX-fP-usg"/>
@@ -86,8 +87,9 @@
                                     <action selector="recordButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KBq-Vz-CeA"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JWC-Cp-iNV">
+                            <button opaque="NO" alpha="0.55000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JWC-Cp-iNV">
                                 <rect key="frame" x="52.5" y="772" width="54.5" height="31"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Stop"/>
                                 <connections>
@@ -170,6 +172,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Runtime" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5sV-0Y-AXz">
+                                <rect key="frame" x="232" y="155" width="63" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="LGf-3X-OpF"/>
+                                    <constraint firstAttribute="width" constant="63" id="usf-ha-cSX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7s5-Jl-hKW"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -178,11 +190,14 @@
                             <constraint firstItem="zC0-5W-299" firstAttribute="centerX" secondItem="UEJ-UU-oGq" secondAttribute="centerX" constant="-97" id="6t3-5L-PAD"/>
                             <constraint firstItem="TUC-Dq-Sdb" firstAttribute="centerX" secondItem="UEJ-UU-oGq" secondAttribute="centerX" constant="-86" id="OdT-Tc-SzT"/>
                             <constraint firstItem="TUC-Dq-Sdb" firstAttribute="centerY" secondItem="UEJ-UU-oGq" secondAttribute="centerY" constant="-335.5" id="d9L-VM-ehh"/>
+                            <constraint firstItem="5sV-0Y-AXz" firstAttribute="centerX" secondItem="UEJ-UU-oGq" secondAttribute="centerX" constant="56.5" id="rEG-tW-qME"/>
+                            <constraint firstItem="5sV-0Y-AXz" firstAttribute="centerY" secondItem="UEJ-UU-oGq" secondAttribute="centerY" constant="-255.5" id="y8h-al-rel"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tTj-ks-iWl"/>
                     <connections>
                         <outlet property="labelRPM" destination="zC0-5W-299" id="XH0-0P-qGn"/>
+                        <outlet property="labelRuntime" destination="zC0-5W-299" id="x0z-fd-K4D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Srs-rp-1G5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -194,6 +209,9 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

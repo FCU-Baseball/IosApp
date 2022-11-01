@@ -62,18 +62,29 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         session.sessionPreset = .hd1280x720
         session.addOutput(AVCaptureMovieFileOutput()) // output file
-        let videoOutput = AVCaptureVideoDataOutput()
-        videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
-        session.addOutput(videoOutput) // get frame
-        videoOutput.connection(with: .video)?.videoOrientation = .portrait
+        //let videoOutput = AVCaptureVideoDataOutput()
+        //videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
+        //session.addOutput(videoOutput) // get frame
+        //videoOutput.connection(with: .video)?.videoOrientation = .landscapeLeft
         session.startRunning()
         settingFPS()
         
         
         //videoPicker
         self.videoPicker = VideoPicker(presentationController: self)
-        
+        //draw rect on screen
+        view.layer.addSublayer(rectLayer())
     }
+    //Set the shouldAutorotate to False
+    override open var shouldAutorotate: Bool {
+       return false
+    }
+
+    // Specify the orientation.
+    //override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    //   return .landscapeLeft
+    //}
+    
     //videoPicker
     
     @IBAction func showImagePicker(_ sender: UIButton) {
@@ -92,6 +103,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         previewLayer.session = session
         previewLayer.videoGravity = .resizeAspectFill
         viewCameraPreview.frame = CGRect(x: 0, y: 0, width: screenRect.size.width, height: screenRect.size.height)
+        //viewCameraPreview.transform = CGAffineTransform(rotationAngle: .pi / 2)
         viewCameraPreview.layer.addSublayer(previewLayer)
         //move  view to  back
         //viewCameraPreview.sendSubviewToBack(onlyrecord)
@@ -102,6 +114,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
     }
     
+    // seting ligth,focal,iso,shutter speed,
     func cameraSetting(setIso:Float, setShutterSpeed:Int32) {
         let input = session.inputs.last as! AVCaptureDeviceInput
         if input.device.deviceType == .builtInMicrophone {
@@ -120,7 +133,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             
             if camera.isFocusModeSupported(.continuousAutoFocus) {
                 camera.focusPointOfInterest = CGPoint(x: 0.5, y: 0.5)
-                camera.focusMode = .continuousAutoFocus
+                camera.focusMode = .autoFocus // change to autofocus
             }
             // shutter speed and iso
             camera.setExposureModeCustom(
@@ -134,6 +147,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
+    // set FPS to lens device max
     func settingFPS() {
         session.beginConfiguration()
         session.sessionPreset = .hd1280x720
@@ -181,7 +195,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     //recordButton.addTarget(self, action: #selector(butttonAction), for: .touchUpInside)
-    @IBAction func recording(_ sender: UIButton) {
+    /*@IBAction func recording(_ sender: UIButton) {
         if(sender.isSelected){
             recordButton.isSelected = false
             let url = URL(fileURLWithPath: NSTemporaryDirectory() + "output.mov")
@@ -193,7 +207,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             let output = session.outputs.first! as! AVCaptureMovieFileOutput
             output.stopRecording()
         }
-    }
+    }*/
     
    /* @IBAction func pickVideo(_ sender: UIButton) {
         self.videoPicker.selectVideo(from: sender)
@@ -205,18 +219,31 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         }
         self.tmpOutputURL = outputFileURL
         print("file ouput url: \(outputFileURL.absoluteString)")
-        videoPicker.jsonPost(videoPath: outputFileURL)
+        videoPicker.jsonPost(videoPath: outputFileURL) // auto upload video
     }
     
     @objc func completion(_ videoPath: String, error:Error?, contextInfo: Any?){
         do{
-            print("file ouput url2: \(videoPath)")
+            //print("file ouput url2: \(videoPath)")
             
             //let fm = FileManager.default
             //try fm.removeItem(atPath: videoPath)
         } catch {
             print(error)
         }
+        let alertController = UIAlertController(
+            title: "提醒您",
+            message:"錄影結束",
+            preferredStyle: .alert
+        )
+        let actionOK = UIAlertAction(
+            title: "確定",
+            style: .default,
+            handler: nil
+        )
+        alertController.addAction(actionOK)
+        show(alertController, sender: self)
+        
     }
    
     @IBAction func toServerResult(_ sender: UIButton) {
@@ -224,10 +251,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
     }
     
+    // Button start recording
     @IBAction func recordButton(_ sender: Any) {
-        
         let url = URL(fileURLWithPath: NSTemporaryDirectory() + "output.mov")
         let output = session.outputs.first! as! AVCaptureMovieFileOutput
+        output.connection(with: .video)?.videoOrientation = .landscapeRight
         output.startRecording(to: url, recordingDelegate: self)
         let seconds = 2.5
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
@@ -236,6 +264,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
+    // Botton stop recording
     @IBAction func stopRecordButton(_ sender: Any) {
         let output = session.outputs.first! as! AVCaptureMovieFileOutput
         output.stopRecording()
@@ -244,9 +273,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender:Any?) {
     let resultVC = segue.destination as! SecondViewController
         resultVC.rpm = self.videoPicker.RPM
+        resultVC.runtime = self.videoPicker.runtime
+        
     }
     
-    
+    // set lens focal point
     func focalSetting(touchX:CGFloat, touchY:CGFloat) {
         let input = session.inputs.last as! AVCaptureDeviceInput
         if input.device.deviceType == .builtInMicrophone {
@@ -262,18 +293,24 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
                 camera.focusPointOfInterest = CGPoint(x: touchX, y: touchY)
                 camera.focusMode = .continuousAutoFocus
             }
+            
+            if camera.isExposureModeSupported(.continuousAutoExposure) {
+                camera.exposurePointOfInterest = CGPoint(x: touchX, y: touchY)
+                camera.exposureMode = .continuousAutoExposure
+            }
+
             camera.unlockForConfiguration()
         } catch {
             print(error)
         }
     }
     
+    // Button replay video
     @IBAction func replayVideo(_ sender: UIButton) {
         playVideo(videoPath: self.videoPicker.VIDEOURL, rpm: self.videoPicker.RPM)
-        
     }
 
-    
+    // replay and show label
     func playVideo(videoPath: URL? , rpm: String?){
         if videoPath == nil {
             print("videoPath is nil")
@@ -294,6 +331,18 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             }*/
     }    // error
     
+    // create a rect layer
+    func rectLayer() -> CAShapeLayer {
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.name = "rectfocal"
+        shapeLayer.frame = CGRect(x: 130, y: 130, width: 50, height: 50)
+        shapeLayer.strokeColor = UIColor.red.cgColor
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.path = UIBezierPath(
+            rect: CGRect(x: 0, y: 0, width: 50, height: 50)
+        ).cgPath
+        return shapeLayer
+    }
 }
     
 /*
@@ -311,7 +360,7 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
         }
     }
 }*/
-extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+/*extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let cgImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
         DispatchQueue.main.async { [unowned self] in
@@ -332,14 +381,26 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         return cgImage
     }
-}
+}*/
 extension ViewController: UITextFieldDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self.view)
+        //let location = touches.first?.location(in: view)
         let touchX = location.x / self.view.frame.width
         let touchY = location.y / self.view.frame.height 
-        focalSetting(touchX: touchX, touchY: touchY) // set focal 0-1
+        if  (0.3<touchX && touchX<0.7 && 0.3<touchY && touchY<0.65){
+            if let sublayers = view.layer.sublayers {
+                for layer in sublayers {
+                    print("i\(String(describing: layer.name))")
+                    if layer.name == "rectfocal" {
+                        layer.position = location
+                    }
+                }
+            }
+            focalSetting(touchX: touchX, touchY: touchY) // set focal 0-1
+        
+        }
         print("began\(location)")
         self.view.endEditing(true)
     }

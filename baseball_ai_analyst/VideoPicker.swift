@@ -14,7 +14,8 @@ import UIKit
 import AVKit
 open class VideoPicker: NSObject {
 
-    public var RPM: String?
+    public var RPM: String = "None"
+    public var runtime: Float = 0.0
     public var VIDEOURL: URL?
     private let pickerController: UIImagePickerController
     private weak var presentationController: UIViewController?
@@ -68,11 +69,12 @@ open class VideoPicker: NSObject {
     
     //can use
     func jsonPost(videoPath: URL?) {
+        let startTime = CFAbsoluteTimeGetCurrent()
         if videoPath == nil {
             print("videoPath is nil")
             return
         }
-        let url = URL(string: "http://36.235.131.131:8000/spinrate")
+        let url = URL(string: "http://36.234.31.243:8000/spinrate")
         var request = URLRequest(
             url: url!,
             cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -117,8 +119,14 @@ open class VideoPicker: NSObject {
                     let meme = try decoder.decode(rpmData.self, from: data)
                     //print("meme\(meme)")
                     self.RPM = String(meme.RPM)
+                    /*
                     print("base64 len\(meme.video_data.count)")
                     self.fileHandler.saveFile(base64String: meme.video_data)
+                    */
+                    // calculate runtime
+                    let endTime = CFAbsoluteTimeGetCurrent()
+                    debugPrint("程式碼執行時長：%f 毫秒", (endTime - startTime)*1000)
+                    self.runtime = Float(endTime - startTime)
                 } catch {
                     print(error)
                 }
@@ -130,7 +138,7 @@ open class VideoPicker: NSObject {
         task.resume()
     }
 
-    func testPostv2(videoPath: URL?) {
+    /*func testPostv2(videoPath: URL?) {
         if videoPath == nil {
             print("videoPath is nil")
             return
@@ -199,7 +207,7 @@ open class VideoPicker: NSObject {
         task.resume()
         semaphore.wait()
         
-    }
+    }*/
 }
 extension VideoPicker: UIImagePickerControllerDelegate {
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
