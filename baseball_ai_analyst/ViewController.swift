@@ -58,9 +58,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         // cemara
         settingPreviewLayer()
         session.addInput(deviceInput.microphone!)
+        //session.addInput(deviceInput.backTelephotoCamera!) // long focal
         session.addInput(deviceInput.backWildAngleCamera!)
         
-        session.sessionPreset = .hd1280x720
+        //session.sessionPreset = .hd1280x720
+        session.sessionPreset = .hd1920x1080
         session.addOutput(AVCaptureMovieFileOutput()) // output file
         //let videoOutput = AVCaptureVideoDataOutput()
         //videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
@@ -128,7 +130,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             
             if camera.isExposureModeSupported(.continuousAutoExposure) {
                 camera.exposurePointOfInterest = CGPoint(x: 0.5, y: 0.5)
-                camera.exposureMode = .continuousAutoExposure
+                camera.exposureMode = .autoExpose
             }
             
             if camera.isFocusModeSupported(.continuousAutoFocus) {
@@ -150,7 +152,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     // set FPS to lens device max
     func settingFPS() {
         session.beginConfiguration()
-        session.sessionPreset = .hd1280x720
+        //session.sessionPreset = .hd1280x720
         let input = session.inputs.last as! AVCaptureDeviceInput
         if input.device.deviceType == .builtInMicrophone {
             return
@@ -257,7 +259,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         let output = session.outputs.first! as! AVCaptureMovieFileOutput
         output.connection(with: .video)?.videoOrientation = .landscapeRight
         output.startRecording(to: url, recordingDelegate: self)
-        let seconds = 2.5
+        let seconds = 10.0
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
             // Put your code which should be executed with a delay here
             output.stopRecording()
@@ -291,12 +293,12 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             //焦距
             if camera.isFocusModeSupported(.continuousAutoFocus) {
                 camera.focusPointOfInterest = CGPoint(x: touchX, y: touchY)
-                camera.focusMode = .continuousAutoFocus
+                camera.focusMode = .autoFocus
             }
             
             if camera.isExposureModeSupported(.continuousAutoExposure) {
                 camera.exposurePointOfInterest = CGPoint(x: touchX, y: touchY)
-                camera.exposureMode = .continuousAutoExposure
+                camera.exposureMode = .autoExpose
             }
 
             camera.unlockForConfiguration()
@@ -389,10 +391,10 @@ extension ViewController: UITextFieldDelegate {
         //let location = touches.first?.location(in: view)
         let touchX = location.x / self.view.frame.width
         let touchY = location.y / self.view.frame.height 
-        if  (0.3<touchX && touchX<0.7 && 0.3<touchY && touchY<0.65){
+        if  (0.3<touchY && touchY<0.65){
             if let sublayers = view.layer.sublayers {
                 for layer in sublayers {
-                    print("i\(String(describing: layer.name))")
+                    //print("i\(String(describing: layer.name))")
                     if layer.name == "rectfocal" {
                         layer.position = location
                     }

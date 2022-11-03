@@ -60,7 +60,6 @@ open class VideoPicker: NSObject {
     
     struct rpmData: Codable {
         let RPM: Int
-        let video_data: String
     }
     
     struct videoData: Codable {
@@ -74,7 +73,7 @@ open class VideoPicker: NSObject {
             print("videoPath is nil")
             return
         }
-        let url = URL(string: "http://36.234.31.243:8000/spinrate")
+        let url = URL(string: "http:/111.252.120.253:8000/spinrate")
         var request = URLRequest(
             url: url!,
             cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -106,7 +105,7 @@ open class VideoPicker: NSObject {
             print("file tmp remove: \(videoPath!.absoluteString)")
             
             let fm = FileManager.default
-            try fm.removeItem(atPath: videoPath!.absoluteString)
+            try fm.removeItem(atPath: videoPath!.path)
         } catch {
             print(error)
         }
@@ -115,17 +114,19 @@ open class VideoPicker: NSObject {
             if let data = data {
                 //let html = String(data: data, encoding: .utf8)
                 let decoder = JSONDecoder()
+                print("return get")
                 do {
                     let meme = try decoder.decode(rpmData.self, from: data)
                     //print("meme\(meme)")
                     self.RPM = String(meme.RPM)
+                    print("have return\(meme.RPM)")
                     /*
                     print("base64 len\(meme.video_data.count)")
                     self.fileHandler.saveFile(base64String: meme.video_data)
                     */
                     // calculate runtime
                     let endTime = CFAbsoluteTimeGetCurrent()
-                    debugPrint("程式碼執行時長：%f 毫秒", (endTime - startTime)*1000)
+                    print("程式碼執行時長1：\(endTime - startTime)")
                     self.runtime = Float(endTime - startTime)
                 } catch {
                     print(error)
@@ -136,6 +137,9 @@ open class VideoPicker: NSObject {
             }
         }
         task.resume()
+        let endTime = CFAbsoluteTimeGetCurrent()
+        print("程式碼執行時長2：\(endTime - startTime)")
+        self.runtime = Float(endTime - startTime)
     }
 
     /*func testPostv2(videoPath: URL?) {
