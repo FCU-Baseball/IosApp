@@ -62,7 +62,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         session.addInput(deviceInput.backWildAngleCamera!)
         
         //session.sessionPreset = .hd1280x720
-        session.sessionPreset = .hd1920x1080
+        session.beginConfiguration()
+        //session.sessionPreset = AVCaptureSession.Preset.medium
+        session.commitConfiguration()
         session.addOutput(AVCaptureMovieFileOutput()) // output file
         //let videoOutput = AVCaptureVideoDataOutput()
         //videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
@@ -153,6 +155,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     func settingFPS() {
         session.beginConfiguration()
         //session.sessionPreset = .hd1280x720
+        //session.sessionPreset = AVCaptureSession.Preset.medium
         let input = session.inputs.last as! AVCaptureDeviceInput
         if input.device.deviceType == .builtInMicrophone {
             return
@@ -161,6 +164,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         let camera = input.device
         //----------------------------------------------//fps
         for format in camera.formats {
+            // 1080p setting
+            guard format.formatDescription.dimensions.width == 1920 else { continue }
+            guard format.formatDescription.dimensions.height == 1080 else { continue }
+            
+            
             for range in format.videoSupportedFrameRateRanges {
                 if maxRate?.maxFrameRate ?? 0 < range.maxFrameRate {
                     maxRate = range
@@ -172,6 +180,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             do {
                 try camera.lockForConfiguration()
                 camera.activeFormat = bestFormat
+                // print format setting
+                print(camera.activeFormat)
+                print(camera.activeFormat.formatDescription)
+                
                 let duration = maxRange.minFrameDuration
                 camera.activeVideoMaxFrameDuration = duration
                 camera.activeVideoMinFrameDuration = duration
@@ -181,6 +193,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             }
         }
         //----------------------------------------------//fps
+        //test set 1080p here
+        //session.sessionPreset = .hd1920x1080
         session.commitConfiguration()
     }
     
@@ -222,6 +236,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         self.tmpOutputURL = outputFileURL
         print("file ouput url: \(outputFileURL.absoluteString)")
         videoPicker.jsonPost(videoPath: outputFileURL) // auto upload video
+        playVideo(videoPath: outputFileURL, rpm: videoPicker.RPM)
     }
     
     @objc func completion(_ videoPath: String, error:Error?, contextInfo: Any?){
@@ -233,6 +248,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         } catch {
             print(error)
         }
+        //===============================================//
+        // Alert Message
         let alertController = UIAlertController(
             title: "提醒您",
             message:"錄影結束",
@@ -244,8 +261,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             handler: nil
         )
         alertController.addAction(actionOK)
-        show(alertController, sender: self)
-        
+        show(alertController, sender: self) //show the alert message on screen
+        //===============================================//
     }
    
     @IBAction func toServerResult(_ sender: UIButton) {
@@ -255,14 +272,30 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     // Button start recording
     @IBAction func recordButton(_ sender: Any) {
-        let url = URL(fileURLWithPath: NSTemporaryDirectory() + "output.mov")
+        // Date Time in Taipei
+        let date: Date = Date()
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHHmmss" // 20221106225255
+        dateFormatter.locale = Locale(identifier: "zh_Hant_TW") //set location
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei") //set timezone
+        let dateFormateString: String = dateFormatter.string(from: date)
+        //====================================================================//
+        let fileName:String = "output_" + dateFormateString + ".mov"
+        let url = URL(fileURLWithPath: NSTemporaryDirectory() + fileName) // stote in tmp
         let output = session.outputs.first! as! AVCaptureMovieFileOutput
-        output.connection(with: .video)?.videoOrientation = .landscapeRight
+        //2.5s auto stop record
+        output.maxRecordedDuration = CMTimeMakeWithSeconds(2.5, preferredTimescale: 240)
+        output.connection(with: .video)?.videoOrientation = .landscapeRight //video spin
         output.startRecording(to: url, recordingDelegate: self)
-        let seconds = 10.0
+        let seconds = 2.7 // time delay
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
             // Put your code which should be executed with a delay here
-            output.stopRecording()
+            if output.isRecording {
+                output.stopRecording()
+                print("still recording stop by asyn")
+            } else {
+                print("not recording stop by maxRecordedDuration")
+            }
         }
     }
     
@@ -318,6 +351,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             print("videoPath is nil")
             return
         }
+        //let loadIndicatorView: UIActivityIndicatorView (
+            
+        //)
+        
         RPMlabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         let unwrappedRPM = rpm ?? "none"
         RPMlabel.text = "RPM \(unwrappedRPM)"
@@ -327,10 +364,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         player = AVPlayer(url: videoPath!)
         playerViewController.player = player
         playerViewController.contentOverlayView!.addSubview(RPMlabel)
+        //playerViewController.contentOverlayView!.addSubview(loadIndicatorView)
         self.present(playerViewController, animated: true)
-            /*{
-                player.play()
-            }*/
+        {
+        //  //auto play the video
+        //  player.play()
+            
+        }
     }    // error
     
     // create a rect layer
