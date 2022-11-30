@@ -15,8 +15,8 @@ class SecondViewController: UIViewController {
     @IBOutlet weak var labelRuntime: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.labelRPM.text =  "\(String(describing: rpm))"
-        self.labelRuntime.text = "\(String(describing: runtime))"
+        self.labelRPM.text =  "\(String(describing: self.rpm!))"
+        self.labelRuntime.text = "\(String(describing: self.runtime!))"
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -2,13 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>6.0</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
-	<key>NSCameraUsageDescription</key>
+	<key>APP Transport Security Settings</key>
+	<dict>
+		<key>Allow Arbitrary Loads</key>
+		<true/>
+		<key>Exception Domains</key>
+		<dict>
+			<key>domain.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSAllowsArbitraryLoads</key>
 	<string></string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
