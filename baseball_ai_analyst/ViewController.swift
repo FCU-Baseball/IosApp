@@ -17,7 +17,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     let activaty = UIActivityIndicatorView(style: .large)
     
     var  rpm: String?
-    var serverIP: String?
+    var serverIP: String = "none"
     public var frame: CGImage?
     private let context = CIContext()
     private var bufferView:UIImageView = UIImageView()
@@ -50,18 +50,22 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     var videoPicker: VideoPicker!
     var screenRect: CGRect! = nil // screen size
     
-    @IBOutlet weak var pixelLabel: UILabel!
     var firstTouch: Bool = true
     var fLocation: CGPoint? = CGPoint(x: (0.0), y: (0.0))
     var sLocation: CGPoint? = CGPoint(x: (0.0), y: (0.0))
-    var personHeight: String?
+    var personHeight: Float = 0.0
     var selectedPredMode:Bool = true
     var screenCtrlMode: Int = 1
     var focusPosition: CGPoint? = CGPoint(x: 300, y: 300)
+    var dis_result: Float = 0.0
     @IBOutlet weak var inputServerIP: UIButton!
     @IBOutlet weak var segCtrlScreen: UISegmentedControl!
     @IBOutlet weak var segCtrlPred: UISegmentedControl!
     @IBOutlet weak var download: UIButton!
+    
+    @IBOutlet weak var pixelLabel: UILabel!
+    
+    @IBOutlet weak var btn_sendParameter: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         activaty.center = view.center
@@ -85,9 +89,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         session.addInput(deviceInput.backWildAngleCamera!)
         
         //session.sessionPreset = .hd1280x720
-        session.beginConfiguration()
+        //session.beginConfiguration()
         //session.sessionPreset = AVCaptureSession.Preset.medium
-        session.commitConfiguration()
+        //session.commitConfiguration()
         session.addOutput(AVCaptureMovieFileOutput()) // output file
         //let videoOutput = AVCaptureVideoDataOutput()
         //videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
@@ -108,11 +112,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         //deltempfile()
         
         rotateView()
+        pixelLabel.isHidden = true
+        btn_sendParameter.isHidden = true
         onlyrecord.setImage(UIImage(named: "record_btn_img"), for: .normal)
         onlyrecord.frame.size = CGSize(width: 55.0, height: 55.0)
         onlyrecord.setTitle("", for: .normal)
         //onlyrecord.textInputMode
         //RPMlabel.text = "100 KPH"
+        /*
         RPMlabel.textColor = UIColor.green
         RPMlabel.backgroundColor = UIColor(red:0,green: 0,blue:0,alpha: 0.6)
         RPMlabel.layer.cornerRadius = 10
@@ -133,11 +140,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             )
         )
         RPMlabel.attributedText = style
+         */
         //RPMlabel.font = UIFont(name: "Trebuchet MS", size: 20)
         
         //RPMlabel.frame = CGRect(x: 20, y:200, width: RPMlabel.frame.size.width, height: RPMlabel.frame.size.height)
         RPMlabel.frame = CGRectMake(10,10,150, 70)
         //view.addSubview(RPMlabel)
+        //hint()
     }
     //Set the shouldAutorotate to False
     override open var shouldAutorotate: Bool {
@@ -154,10 +163,19 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         segCtrlScreen.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
         inputServerIP.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
         pixelLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
-        
+        btn_sendParameter.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
+
     }
-    //videoPicker
     
+    func hint(){
+        let alertController = UIAlertController(title:"提醒您！",message: "＊請先輸入Server IP!\n *球速預測須先校正一次!",preferredStyle: .alert)
+        let actionOK = UIAlertAction(title: "OK", style: .default){_ in
+            print("ok")
+        }
+        alertController.addAction(actionOK)
+        show(alertController ,sender: self)
+        //self.present(alertController, animated: true)
+    }
     @IBAction func predModeClicked(_ sender: UISegmentedControl) {
         let index = sender.selectedSegmentIndex
         
@@ -170,7 +188,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             session.commitConfiguration()*/
             //===============================================//
             self.selectedPredMode = true
-            videoPicker.ServerURL = "http://" + serverIP! + ":8000/ballspeed"
+            videoPicker.ServerURL = "http://" + serverIP + ":8000/ballspeed"
             print(videoPicker.ServerURL)
         } else{
             //http://36.235.131.131:8000/
@@ -182,12 +200,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             session.commitConfiguration()*/
             //=================================================//
             self.selectedPredMode = false
-            videoPicker.ServerURL = "http://" + serverIP! + ":8000/spinrate"
+            videoPicker.ServerURL = "http://" + serverIP + ":8000/spinrate"
             print(videoPicker.ServerURL)
-            /*let alertController = UIAlertController(title: "TEST", message: "HELLO", preferredStyle: .alert)
-            let actionOK = UIAlertAction(title: "OK", style: .default,handler: nil)
-            alertController.addAction(actionOK)
-            show(alertController,sender: self)*/
         }
         
     }
@@ -205,6 +219,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
                     
             }
         }
+        pixelLabel.isHidden = true
+        btn_sendParameter.isHidden = true
         let index = sender.selectedSegmentIndex
         
         switch index {
@@ -219,17 +235,18 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             break
         case 2:
             screenCtrlMode = 2
+            pixelLabel.isHidden = false
+            btn_sendParameter.isHidden = false
             let alertController = UIAlertController(title:"輸入身高(m):",message: nil,preferredStyle: .alert)
             let actionOK = UIAlertAction(title: "OK", style: .default){
                 action in
-                let textHeight = alertController.textFields![0].text
-                self.personHeight = textHeight
-                print(self.personHeight!)
+                
+                self.personHeight = Float(alertController.textFields![0].text!) ?? 0.0
+                print(self.personHeight)
             }
             alertController.addTextField(configurationHandler: nil)
             alertController.addAction(actionOK)
             show(alertController, sender: self)
-            
         
             break
         default:
@@ -237,6 +254,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             
         }
     }
+    
+    @IBAction func sendParameter(_ sender: UIButton) {
+        //let parameter: Float = dis_result / personHeight
+        videoPicker.jsonPost_parameter(height: personHeight, length: dis_result){
+            print("send end")
+        }
+    }
+    
     @IBAction func showImagePicker(_ sender: UIButton) {
         //view.addSubview(activaty)
         //activaty.startAnimating()
@@ -319,8 +344,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             }
             // shutter speed and iso
             camera.setExposureModeCustom(
-                duration: CMTime(value: 1, timescale: 1000),
-                iso: 400,
+                duration: CMTime(value: 1, timescale: 3000),
+                iso: 50,
                 completionHandler: nil
             )
             camera.unlockForConfiguration()
@@ -524,7 +549,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             //self.videoPicker.jsonPost(videoPath: self.tmpOutputURL) // auto upload video
             self.activaty.startAnimating()
             self.view.addSubview(self.activaty)
-            self.videoPicker.stream(file: self.tmpOutputURL){
+            self.videoPicker.gzipstream(file: self.tmpOutputURL){
                 DispatchQueue.main.async {
                     self.activaty.stopAnimating()
                     self.activaty.removeFromSuperview()
@@ -617,7 +642,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         //playVideo(videoPath: self.videoPicker.VIDEOURL, serverResult: self.videoPicker.RPM)
         print("press")
         let videoImageUrl = "http://114.41.138.43:8000/download/111.mp4"
-
+        let donloadurl = URL(string:videoImageUrl)
+        self.playVideo(videoPath: donloadurl, serverResult:self.videoPicker.RPM)
         DispatchQueue.global(qos: .background).async {
             if let url = URL(string: videoImageUrl),
                 let urlData = NSData(contentsOf: url) {
@@ -654,7 +680,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         //RPMlabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         let unwrapped = serverResult ?? "none"
 
-        let lab_spinrate = "SPINRATE \(unwrapped) RPM"
+        let lab_spinrate = "SPINRATE        \(unwrapped) RPM"
         let lab_ballspeed = "BALLSPEED             \(unwrapped) KPH"
         
         if (selectedPredMode == false){
@@ -743,7 +769,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             session.commitConfiguration()
             //===============================================//
             self.selectedPredMode = true
-            videoPicker.ServerURL = "http://" + serverIP! + ":8000/ballspeed"
+            videoPicker.ServerURL = "http://" + serverIP + ":8000/ballspeed"
             print(videoPicker.ServerURL)
         } else{
             //http://36.235.131.131:8000/
@@ -755,7 +781,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             session.commitConfiguration()
             //=================================================//
             self.selectedPredMode = false
-            videoPicker.ServerURL = "http://" + serverIP! + ":8000/spinrate"
+            videoPicker.ServerURL = "http://" + serverIP + ":8000/spinrate"
             print(videoPicker.ServerURL)
             /*let alertController = UIAlertController(title: "TEST", message: "HELLO", preferredStyle: .alert)
             let actionOK = UIAlertAction(title: "OK", style: .default,handler: nil)
@@ -769,8 +795,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             action in
             let textIP = alertController.textFields![0].text
             self.videoPicker.ServerURL = "http://" + textIP! + ":8000/ballspeed"
-            self.serverIP = textIP
-            print(self.serverIP!)
+            self.videoPicker.parameterURL = "http://" + textIP! + ":8000/parameter"
+            self.serverIP = textIP!
+            print(self.serverIP)
         }
         alertController.addTextField(configurationHandler: nil)
         alertController.addAction(actionOK)
@@ -868,19 +895,20 @@ extension ViewController: UITextFieldDelegate {
        //pixel to meter
        var path = UIBezierPath()
        print("Scale: \(UIScreen.main.scale)")
-       if firstTouch == true{
+       if (firstTouch == true && screenCtrlMode == 2){
            self.fLocation = touches.first?.previousLocation(in: self.viewCameraPreview)
            firstTouch = false
            print("cgpoint first: \(fLocation!)")
-       } else {
+       } else if(firstTouch == false && screenCtrlMode == 2){
            self.sLocation = touches.first?.previousLocation(in: self.viewCameraPreview)
            print("cgpoint second: \(sLocation!)")
-           let disx = fLocation!.x - sLocation!.x
-           let disy = fLocation!.y - sLocation!.y
+           let disx = (fLocation!.x - sLocation!.x) * (1080/UIScreen.main.bounds.width)
+           let disy = (fLocation!.y - sLocation!.y) * (1920/UIScreen.main.bounds.height)
            let dis = sqrt(disx * disx + disy * disy)
-           let px = dis * (1080/UIScreen.main.bounds.width)
+           dis_result = Float(dis)
+           print("screen h: \(UIScreen.main.bounds.height)")
            print("screen width: \(UIScreen.main.bounds.width)")
-           print("dist [\(disx),\(disy), \(dis) , \(px)]")
+           print("dist [\(disx),\(disy), \(dis)]")
            firstTouch = true
            
            if let sublayers = view.layer.sublayers {
@@ -896,7 +924,7 @@ extension ViewController: UITextFieldDelegate {
            path.addLine(to: sLocation ?? CGPoint.init())
            drawLine()
            
-           pixelLabel.text = "\(Int(px)) px"
+           pixelLabel.text = "\(Int(dis)) px"
        }
 
        func drawLine(){
