@@ -12,6 +12,7 @@ import FoundationNetworking
 import AVFoundation
 import UIKit
 import AVKit
+import Gzip
 //import Combine
 open class VideoPicker: NSObject {
 
@@ -522,9 +523,17 @@ open class VideoPicker: NSObject {
         var request1 = URLRequest(url: url!,timeoutInterval: 30)
         //var request1 = URLRequest(url: URL(string: "http://10.22.83.26:8000/upload/1")!,timeoutInterval: 30)
         // compress
-        if let compressedData = try? NSData(data: videoData!).compressed(using: .zlib) as Data {
-            request1.httpBody = compressedData
+        do{
+            //if let compressedData = try? NSData(data: videoData!).compressed(using: NSData.CompressionAlgorithm.zlib) as Data {
+            //    request1.httpBody = compressedData
+            //}
+            
+            request1.httpBody = try videoData?.gzipped()
+            
+        } catch{
+            print ("Compression error: \(error)")
         }
+        
         
 
         request1.addValue("video/quicktime", forHTTPHeaderField: "Content-Type")

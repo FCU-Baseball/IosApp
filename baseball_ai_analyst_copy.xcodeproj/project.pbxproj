@@ -17,7 +17,75 @@
 		8478533228D34C3F007B514C /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8478533128D34C3F007B514C /* VideoPicker.swift */; };
 		8486FB0328EC75E100727B8D /* ServerResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8486FB0228EC75E100727B8D /* ServerResultViewController.swift */; };
 		848BDCB729096DE900814FAC /* FileHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848BDCB629096DE900814FAC /* FileHandler.swift */; };
+		849FA7272986800700D6F163 /* Gzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 849FA71729867DC600D6F163 /* Gzip.framework */; };
+		849FA7282986800700D6F163 /* Gzip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 849FA71729867DC600D6F163 /* Gzip.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		849FA71429867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2AE050881D4A2C070040E4C9;
+			remoteInfo = "Gzip macOS";
+		};
+		849FA71629867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2AE050991D4A2DC30040E4C9;
+			remoteInfo = "Gzip iOS";
+		};
+		849FA71829867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A321EE71D4A6138002B0245;
+			remoteInfo = "Gzip watchOS";
+		};
+		849FA71A29867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A321F071D4A635F002B0245;
+			remoteInfo = "Gzip tvOS";
+		};
+		849FA71C29867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A58A7571B00F414005FBBC2;
+			remoteInfo = "Tests macOS";
+		};
+		849FA71E29867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A58A77D1B00FBEF005FBBC2;
+			remoteInfo = "Tests iOS";
+		};
+		849FA72029867DC600D6F163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A2CCF7A238127CB00FAC851;
+			remoteInfo = "Test tvOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		849FA7292986800700D6F163 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				849FA7282986800700D6F163 /* Gzip.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8478531828CE0FF5007B514C /* baseball_ai_analyst.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = baseball_ai_analyst.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,6 +100,7 @@
 		8478533128D34C3F007B514C /* VideoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPicker.swift; sourceTree = "<group>"; };
 		8486FB0228EC75E100727B8D /* ServerResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResultViewController.swift; sourceTree = "<group>"; };
 		848BDCB629096DE900814FAC /* FileHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHandler.swift; sourceTree = "<group>"; };
+		849FA70929867DC600D6F163 /* Gzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Gzip.xcodeproj; path = "../../../../Downloads/GzipSwift-develop/Gzip.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				849FA7272986800700D6F163 /* Gzip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +120,7 @@
 			children = (
 				8478531A28CE0FF6007B514C /* baseball_ai_analyst */,
 				8478531928CE0FF5007B514C /* Products */,
+				849FA72229867E3800D6F163 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +135,7 @@
 		8478531A28CE0FF6007B514C /* baseball_ai_analyst */ = {
 			isa = PBXGroup;
 			children = (
+				849FA70929867DC600D6F163 /* Gzip.xcodeproj */,
 				8478532928CE0FF8007B514C /* Info.plist */,
 				8478531B28CE0FF6007B514C /* AppDelegate.swift */,
 				8478532F28CE240D007B514C /* DeviceInput.swift */,
@@ -79,6 +151,27 @@
 			path = baseball_ai_analyst;
 			sourceTree = "<group>";
 		};
+		849FA70A29867DC600D6F163 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				849FA71529867DC600D6F163 /* Gzip.framework */,
+				849FA71729867DC600D6F163 /* Gzip.framework */,
+				849FA71929867DC600D6F163 /* Gzip.framework */,
+				849FA71B29867DC600D6F163 /* Gzip.framework */,
+				849FA71D29867DC600D6F163 /* Tests macOS.xctest */,
+				849FA71F29867DC600D6F163 /* Tests iOS.xctest */,
+				849FA72129867DC600D6F163 /* Test tvOS.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		849FA72229867E3800D6F163 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -89,6 +182,7 @@
 				8478531428CE0FF5007B514C /* Sources */,
 				8478531528CE0FF5007B514C /* Frameworks */,
 				8478531628CE0FF5007B514C /* Resources */,
+				849FA7292986800700D6F163 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -125,12 +219,70 @@
 			mainGroup = 8478530F28CE0FF5007B514C;
 			productRefGroup = 8478531928CE0FF5007B514C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 849FA70A29867DC600D6F163 /* Products */;
+					ProjectRef = 849FA70929867DC600D6F163 /* Gzip.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8478531728CE0FF5007B514C /* baseball_ai_analyst */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		849FA71529867DC600D6F163 /* Gzip.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gzip.framework;
+			remoteRef = 849FA71429867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		849FA71729867DC600D6F163 /* Gzip.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gzip.framework;
+			remoteRef = 849FA71629867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		849FA71929867DC600D6F163 /* Gzip.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gzip.framework;
+			remoteRef = 849FA71829867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		849FA71B29867DC600D6F163 /* Gzip.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Gzip.framework;
+			remoteRef = 849FA71A29867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		849FA71D29867DC600D6F163 /* Tests macOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Tests macOS.xctest";
+			remoteRef = 849FA71C29867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		849FA71F29867DC600D6F163 /* Tests iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Tests iOS.xctest";
+			remoteRef = 849FA71E29867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		849FA72129867DC600D6F163 /* Test tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Test tvOS.xctest";
+			remoteRef = 849FA72029867DC600D6F163 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8478531628CE0FF5007B514C /* Resources */ = {

@@ -345,7 +345,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             // shutter speed and iso
             camera.setExposureModeCustom(
                 duration: CMTime(value: 1, timescale: 3000),
-                iso: 50,
+                iso: 500,
                 completionHandler: nil
             )
             camera.unlockForConfiguration()
@@ -491,6 +491,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         }
         //===============================================//
         // Alert Message
+        print("Alert start")
         let alertController = UIAlertController(
             title: "提醒您",
             message:"錄影結束",
