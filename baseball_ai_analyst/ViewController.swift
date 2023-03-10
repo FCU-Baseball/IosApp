@@ -75,7 +75,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         activaty.center = view.center
         // Do any additional setup after loading the view.
            
-        // cemara
+        // cemara setting
         settingPreviewLayer()
         //session.addInput(deviceInput.backTelephotoCamera!) // long focal
         session.addInput(deviceInput.backWildAngleCamera!)
@@ -89,28 +89,31 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
         //draw rect on screen
         view.layer.addSublayer(rectLayer())
+
         // 主畫面按鈕旋轉
         rotateView()
-
         pixelLabel.isHidden = true
         btn_sendParameter.isHidden = true
+
         //錄影鍵
         onlyrecord.setImage(UIImage(named: "record_btn_img"), for: .normal)
         onlyrecord.frame.size = CGSize(width: 55.0, height: 55.0)
         onlyrecord.setTitle("", for: .normal)
         
         RPMlabel.frame = CGRectMake(10,10,150, 70)
-        //hint()
+        //hint() 
     }
+
     //Set the shouldAutorotate to False
     override open var shouldAutorotate: Bool {
        return false
     }
-
     // Specify the orientation.
     override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
        return .portrait
     }
+
+    ///旋轉主畫面按鈕
     func rotateView(){
         download.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
         segCtrlPred.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
@@ -118,109 +121,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         inputServerIP.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
         pixelLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
         btn_sendParameter.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
-    }
-    
-    func hint(){
-        let alertController = UIAlertController(title:"提醒您！",message: "＊請先輸入Server IP!\n *球速預測須先校正一次!",preferredStyle: .alert)
-        let actionOK = UIAlertAction(title: "OK", style: .default){_ in
-            print("ok")
-        }
-        alertController.addAction(actionOK)
-        show(alertController ,sender: self)
-        //self.present(alertController, animated: true)
-    }
-
-    ///切換球速或轉速模式
-    @IBAction func predModeClicked(_ sender: UISegmentedControl) {
-        let index = sender.selectedSegmentIndex
+    }    
         
-        
-        if index == 1 {
-            //===============camera change===================//
-            /*session.beginConfiguration()
-            session.removeInput(session.inputs.last!)
-            session.addInput(deviceInput.backWildAngleCamera!)
-            session.commitConfiguration()*/
-            //===============================================//
-            self.selectedPredMode = true
-            videoPicker.ServerURL = "http://" + serverIP + ":8000/ballspeed"
-            print(videoPicker.ServerURL)
-        } else{
-            //http://36.235.131.131:8000/
-            //===============camera change===================//
-            /*session.beginConfiguration()
-            session.removeInput(session.inputs.last!)
-            session.addInput(deviceInput.backTelephotoCamera!)
-            // long focal
-            session.commitConfiguration()*/
-            //=================================================//
-            self.selectedPredMode = false
-            videoPicker.ServerURL = "http://" + serverIP + ":8000/spinrate"
-            print(videoPicker.ServerURL)
-        }
-        
-    }
-    @IBAction func screenModeClicked(_ sender: UISegmentedControl) {
-        
-        if let sublayers = view.layer.sublayers {
-            for layer in sublayers {
-                if layer.name == "rectfocal" {
-                    layer.removeFromSuperlayer()
-                }
-                if layer.name == "straightLine"{
-                    layer.removeFromSuperlayer()
-                }
-                    
-            }
-        }
-        pixelLabel.isHidden = true
-        btn_sendParameter.isHidden = true
-
-        let index = sender.selectedSegmentIndex
-        switch index {
-        case 0:
-            screenCtrlMode = 0
-            view.layer.addSublayer(rectLayer())
-            break
-        case 1:
-            screenCtrlMode = 1
-            view.layer.addSublayer(rectLayer())
-            
-            break
-        case 2:
-            screenCtrlMode = 2
-            pixelLabel.isHidden = false
-            btn_sendParameter.isHidden = false
-            let alertController = UIAlertController(title:"輸入身高(m):",message: nil,preferredStyle: .alert)
-            let actionOK = UIAlertAction(title: "OK", style: .default){
-                action in
-                self.personHeight = Float(alertController.textFields![0].text!) ?? 0.0
-                print(self.personHeight)
-            }
-            alertController.addTextField(configurationHandler: nil)
-            alertController.addAction(actionOK)
-            show(alertController, sender: self)
-            break
-        default:
-            break
-        }
-    }
-    
-    @IBAction func sendParameter(_ sender: UIButton) {
-        videoPicker.jsonPost_parameter(height: personHeight, length: dis_result){
-            print("send end")
-        }
-    }
-    
-    @IBAction func showImagePicker(_ sender: UIButton) {
-
-        //playVideo(videoPath: self.tmpOutputURL, rpm: videoPicker.RPM)
-        self.videoPicker.selectVideo(from: sender)
-        //playVideo(videoPath: videoPicker.VIDEOURL, rpm: videoPicker.RPM)
-    
-    }
-    
-    
     func settingPreviewLayer() {
         let previewLayer = AVCaptureVideoPreviewLayer()
         //full screen
@@ -312,24 +214,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         //=======================================================//
         session.commitConfiguration()
     }
-    
-    @IBAction func settingIso(_ sender: UITextField) {
-        let valIso = Float(txtFieldIso.text!) ?? 50.0
-        let valShutterSpeed = Int32(txtFieldShutterSpeed.text!) ?? 3000
-        cameraSetting(setIso:valIso, setShutterSpeed:valShutterSpeed)
-    }
-    
-    @IBAction func settingShutterSpeed(_ sender: UITextField) {
-        let valIso = Float(txtFieldIso.text!) ?? 50.0
-        let valShutterSpeed = Int32(txtFieldShutterSpeed.text!) ?? 3000
-        cameraSetting(setIso:valIso, setShutterSpeed:valShutterSpeed)
-    }
-    
-    
-   /* @IBAction func pickVideo(_ sender: UIButton) {
-        self.videoPicker.selectVideo(from: sender)
-        
-    }*/
+   
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFileURL.path) {
             UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, self, #selector(completion(_:error:contextInfo:)), nil)
@@ -360,8 +245,93 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         show(alertController, sender: self) //show the alert message on screen
         //===============================================//
     }
+
+    ///切換球速或轉速模式
+    @IBAction func predModeClicked(_ sender: UISegmentedControl) {
+        let index = sender.selectedSegmentIndex
+        
+        
+        if index == 1 {
+            //===============camera change===================//
+            /*session.beginConfiguration()
+            session.removeInput(session.inputs.last!)
+            session.addInput(deviceInput.backWildAngleCamera!)
+            session.commitConfiguration()*/
+            //===============================================//
+            self.selectedPredMode = true
+            videoPicker.ServerURL = "http://" + serverIP + ":8000/ballspeed"
+            print(videoPicker.ServerURL)
+        } else{
+            //http://36.235.131.131:8000/
+            //===============camera change===================//
+            /*session.beginConfiguration()
+            session.removeInput(session.inputs.last!)
+            session.addInput(deviceInput.backTelephotoCamera!)
+            // long focal
+            session.commitConfiguration()*/
+            //=================================================//
+            self.selectedPredMode = false
+            videoPicker.ServerURL = "http://" + serverIP + ":8000/spinrate"
+            print(videoPicker.ServerURL)
+        }
+        
+    }
+
+    /// 切換 關/對焦/pixeltometer校正
+    @IBAction func screenModeClicked(_ sender: UISegmentedControl) {
+        
+        if let sublayers = view.layer.sublayers {
+            for layer in sublayers {
+                if layer.name == "rectfocal" {
+                    layer.removeFromSuperlayer()
+                }
+                if layer.name == "straightLine"{
+                    layer.removeFromSuperlayer()
+                }
+                    
+            }
+        }
+        pixelLabel.isHidden = true
+        btn_sendParameter.isHidden = true
+
+        let index = sender.selectedSegmentIndex
+        switch index {
+        case 0:
+            screenCtrlMode = 0
+            view.layer.addSublayer(rectLayer())
+            break
+        case 1:
+            screenCtrlMode = 1
+            view.layer.addSublayer(rectLayer())
+            
+            break
+        case 2:
+            screenCtrlMode = 2
+            pixelLabel.isHidden = false
+            btn_sendParameter.isHidden = false
+            let alertController = UIAlertController(title:"輸入身高(m):",message: nil,preferredStyle: .alert)
+            let actionOK = UIAlertAction(title: "OK", style: .default){
+                action in
+                self.personHeight = Float(alertController.textFields![0].text!) ?? 0.0
+                print(self.personHeight)
+            }
+            alertController.addTextField(configurationHandler: nil)
+            alertController.addAction(actionOK)
+            show(alertController, sender: self)
+            break
+        default:
+            break
+        }
+    }
+
+    /// 傳送校正參數到Server
+    @IBAction func sendParameter(_ sender: UIButton) {
+        videoPicker.jsonPost_parameter(height: personHeight, length: dis_result){
+            print("send end")
+        }
+    }
    
-    // Button start recording
+    /// Button start recording
     @IBAction func recordButton(_ sender: Any) {
         // Date Time in Taipei
         let date: Date = Date()
@@ -409,63 +379,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         }
         
     }
-    
-    
-    // set lens focal point
-    func focalSetting(touchX:CGFloat, touchY:CGFloat) {
-        let input = session.inputs.last as! AVCaptureDeviceInput
-        if input.device.deviceType == .builtInMicrophone {
-            return
-        }
-        
-        do {
-            let camera = input.device
-            
-            try camera.lockForConfiguration()
-            //焦距
-            if camera.isFocusModeSupported(.continuousAutoFocus) {
-                camera.focusPointOfInterest = CGPoint(x: touchX, y: touchY)
-                camera.focusMode = .autoFocus
-            }
-
-            camera.unlockForConfiguration()
-        } catch {
-            print(error)
-        }
-    }
-    
-    // Button replay video
-    @IBAction func replayVideo(_ sender: UIButton) {
-
-        let videoImageUrl = "http://114.41.138.43:8000/download/111.mp4"
-        let donloadurl = URL(string:videoImageUrl)
-        self.playVideo(videoPath: donloadurl, serverResult:self.videoPicker.RPM)
-        DispatchQueue.global(qos: .background).async {
-            if let url = URL(string: videoImageUrl),
-                let urlData = NSData(contentsOf: url) {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
-                let filePath="\(documentsPath)/tempFile.mov"
-                DispatchQueue.main.async {
-                    urlData.write(toFile: filePath, atomically: true)
-                    PHPhotoLibrary.shared().performChanges({
-                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(fileURLWithPath: filePath))
-                    }) { completed, error in
-                        if completed {
-                            print("Video is saved!")
-                            
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    func degreeToRadian(_ x: CGFloat) -> CGFloat {
-        return .pi * x / 180.0
-    }
-    
-    // replay and show label
+         
+    /// 重播慢動作影片和顯示預測結果
     func playVideo(videoPath: URL? , serverResult: String?){
         if videoPath == nil {
             print("videoPath is nil")
@@ -504,22 +419,24 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         //  player.play()
         }
     }    
-
-    func deltempfile(){
-        let fm = FileManager.default
-        do{
-            let files = try fm.contentsOfDirectory(atPath: NSTemporaryDirectory())
-            for file in files{
-                print(file)
-                //del file
-                try fm.removeItem(atPath: (NSTemporaryDirectory() + file))
-            }
-        } catch{
-            print("err")
-        }
-    }
     
-    // create a rect layer
+    /// 輸入ServerIP
+    @IBAction func ServerInput(_ sender: Any){
+        let alertController = UIAlertController(title:"Input IP:",message: nil,preferredStyle: .alert)
+        let actionOK = UIAlertAction(title: "OK", style: .default){
+            action in
+            let textIP = alertController.textFields![0].text
+            self.videoPicker.ServerURL = "http://" + textIP! + ":8000/ballspeed"
+            self.videoPicker.parameterURL = "http://" + textIP! + ":8000/parameter"
+            self.serverIP = textIP!
+            print(self.serverIP)
+        }
+        alertController.addTextField(configurationHandler: nil)
+        alertController.addAction(actionOK)
+        show(alertController, sender: self)
+    }
+
+    /// create a rect layer
     func rectLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.name = "rectfocal"
@@ -539,8 +456,57 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         return shapeLayer
         
     }
-    
-    ///應該未使用
+
+    /// 重播骨架影片
+    @IBAction func replayVideo(_ sender: UIButton) {
+
+        let videoImageUrl = "http://114.41.138.43:8000/download/111.mp4"
+        let donloadurl = URL(string:videoImageUrl)
+        self.playVideo(videoPath: donloadurl, serverResult:self.videoPicker.RPM)
+        DispatchQueue.global(qos: .background).async {
+            if let url = URL(string: videoImageUrl),
+                let urlData = NSData(contentsOf: url) {
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
+                let filePath="\(documentsPath)/tempFile.mov"
+                DispatchQueue.main.async {
+                    urlData.write(toFile: filePath, atomically: true)
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(fileURLWithPath: filePath))
+                    }) { completed, error in
+                        if completed {
+                            print("Video is saved!")
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// 對焦框位置
+    func focalSetting(touchX:CGFloat, touchY:CGFloat) {
+        let input = session.inputs.last as! AVCaptureDeviceInput
+        if input.device.deviceType == .builtInMicrophone {
+            return
+        }
+        
+        do {
+            let camera = input.device
+            
+            try camera.lockForConfiguration()
+            //焦距
+            if camera.isFocusModeSupported(.continuousAutoFocus) {
+                camera.focusPointOfInterest = CGPoint(x: touchX, y: touchY)
+                camera.focusMode = .autoFocus
+            }
+
+            camera.unlockForConfiguration()
+        } catch {
+            print(error)
+        }
+    }
+    //// 未使用 待確認
+    ///未使用 待確認
     @IBAction func onValueChanged(_ sender: UISwitch){
         
         if sender.isOn {
@@ -568,22 +534,61 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
         }
     }
-    @IBAction func ServerInput(_ sender: Any){
-        let alertController = UIAlertController(title:"Input IP:",message: nil,preferredStyle: .alert)
-        let actionOK = UIAlertAction(title: "OK", style: .default){
-            action in
-            let textIP = alertController.textFields![0].text
-            self.videoPicker.ServerURL = "http://" + textIP! + ":8000/ballspeed"
-            self.videoPicker.parameterURL = "http://" + textIP! + ":8000/parameter"
-            self.serverIP = textIP!
-            print(self.serverIP)
-        }
-        alertController.addTextField(configurationHandler: nil)
-        alertController.addAction(actionOK)
-        show(alertController, sender: self)
+
+
+    /* 未使用 待確認
+    @IBAction func settingIso(_ sender: UITextField) {
+        let valIso = Float(txtFieldIso.text!) ?? 50.0
+        let valShutterSpeed = Int32(txtFieldShutterSpeed.text!) ?? 3000
+        cameraSetting(setIso:valIso, setShutterSpeed:valShutterSpeed)
     }
-}
     
+    @IBAction func settingShutterSpeed(_ sender: UITextField) {
+        let valIso = Float(txtFieldIso.text!) ?? 50.0
+        let valShutterSpeed = Int32(txtFieldShutterSpeed.text!) ?? 3000
+        cameraSetting(setIso:valIso, setShutterSpeed:valShutterSpeed)
+    }
+    */
+
+    @IBAction func showImagePicker(_ sender: UIButton) {
+
+        //playVideo(videoPath: self.tmpOutputURL, rpm: videoPicker.RPM)
+        self.videoPicker.selectVideo(from: sender)
+        //playVideo(videoPath: videoPicker.VIDEOURL, rpm: videoPicker.RPM)
+    
+    }
+
+    func degreeToRadian(_ x: CGFloat) -> CGFloat {
+        return .pi * x / 180.0
+    }
+    ///刪除暫存影片
+    func deltempfile(){
+        let fm = FileManager.default
+        do{
+            let files = try fm.contentsOfDirectory(atPath: NSTemporaryDirectory())
+            for file in files{
+                print(file)
+                //del file
+                try fm.removeItem(atPath: (NSTemporaryDirectory() + file))
+            }
+        } catch{
+            print("err")
+        }
+    }
+
+    func hint(){
+        let alertController = UIAlertController(title:"提醒您！",message: "＊請先輸入Server IP!\n *球速預測須先校正一次!",preferredStyle: .alert)
+        let actionOK = UIAlertAction(title: "OK", style: .default){_ in
+            print("ok")
+        }
+        alertController.addAction(actionOK)
+        show(alertController ,sender: self)
+        //self.present(alertController, animated: true)
+    }
+    ////
+}
+
+/// 變換對焦位置 和 pixeltometer校正
 extension ViewController: UITextFieldDelegate {
    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        //================================================================//
