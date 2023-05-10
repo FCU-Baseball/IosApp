@@ -8,11 +8,11 @@ IBAction func replayVideo(_ sender: UIButton)        回放慢動作影片與結
 ## ViewController.swift 主程式
 override func viewDidLoad() 程式進入點
 
-### 相機初始化 
+* 相機初始化 
 #### settingPreviewLayer()
 功能 : 設定預覽錄影畫面
 
-#### *settingFPS()
+#### settingFPS()
 功能 : 設定 像素1080p 與 該相機最高幀數
 
 #### cameraSetting()
@@ -22,14 +22,14 @@ override func viewDidLoad() 程式進入點
 功能 : 手動輸入Server IP
 
 
-### 模式切換
+* 模式切換
 #### @IBAction func predModeClicked(_ sender: UISegmentedControl) 
 功能 : 選擇球速或轉速功能 
 
 #### @IBAction func screenModeClicked(_ sender: UISegmentedControl) 
 功能 : 切換 關/對焦鎖定/pixeltometer校正
 
-### 錄影流程
+* 錄影流程
 
 #### @IBAction func recordButton(_ sender: Any)  
 功能 : 按錄影鍵後錄影開始
@@ -40,14 +40,14 @@ override func viewDidLoad() 程式進入點
 #### @IBAction func replayVideo(_ sender: UIButton)
 功能 : 回放慢動作影片與結果
 
-### 焦距設定
+* 對焦設定
 
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
 功能 : 點擊螢幕獲取對焦框位置
 #### func focalSetting(touchX:CGFloat, touchY:CGFloat)
 功能 : 設定對焦框位置
   
-### 球速額外使用函式
+* 球速額外使用函式
   
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
 功能 : 計算校正參數
