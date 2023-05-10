@@ -12,7 +12,7 @@ override func viewDidLoad() 程式進入點
 #### settingPreviewLayer()
 功能 : 設定預覽錄影畫面
 
-#### settingFPS()
+#### *settingFPS()
 功能 : 設定 像素1080p 與 該相機最高幀數
 
 #### cameraSetting()
