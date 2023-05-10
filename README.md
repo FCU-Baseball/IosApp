@@ -8,7 +8,7 @@ IBAction func replayVideo(_ sender: UIButton)        回放慢動作影片與結
 ## ViewController.swift 主程式
 override func viewDidLoad() 程式進入點
 
-* 相機初始化 
+### 相機初始化 
 #### settingPreviewLayer()
 功能 : 設定預覽錄影畫面
 
@@ -22,32 +22,32 @@ override func viewDidLoad() 程式進入點
 功能 : 手動輸入Server IP
 
 
-* 模式切換
+### 模式切換
 #### @IBAction func predModeClicked(_ sender: UISegmentedControl) 
 功能 : 選擇球速或轉速功能 
 
 #### @IBAction func screenModeClicked(_ sender: UISegmentedControl) 
 功能 : 切換 關/對焦鎖定/pixeltometer校正
 
-* 錄影流程
+### 錄影流程
 
 #### @IBAction func recordButton(_ sender: Any)  
 功能 : 按錄影鍵後錄影開始
 #### self.videoPicker.gzipstream(file: self.tmpOutputURL)
 功能 : 影片POST到Server
-#### func fileOutput(...)
+#### fileOutput(...)
 功能 : 錄影完成後自動呼叫，之後儲存影片到相簿
 #### @IBAction func replayVideo(_ sender: UIButton)
 功能 : 回放慢動作影片與結果
 
-* 對焦設定
+### 對焦設定
 
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
 功能 : 點擊螢幕獲取對焦框位置
 #### func focalSetting(touchX:CGFloat, touchY:CGFloat)
 功能 : 設定對焦框位置
   
-* 球速額外使用函式
+### 球速額外使用函式
   
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
 功能 : 計算校正參數
@@ -56,7 +56,7 @@ override func viewDidLoad() 程式進入點
   
 ## VideoPicker.swift
 
-#### jsonPost_parameter
+#### jsonPost_parameter(height: Float?, length: Float?, completion: @escaping () -> ())
 功能 : Post校正參數到Server
-#### gzipstream
+#### gzipstream(file : URL?, completion: @escaping() -> ())
 功能 : Post影片到Server  
