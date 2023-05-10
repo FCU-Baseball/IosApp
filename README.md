@@ -3,7 +3,7 @@ IBAction func recordButton(_ sender: Any)            按錄影鍵後錄影開始
 
 self.videoPicker.gzipstream(file: self.tmpOutputURL) 影片POST到Server
 
-IBAction func replayVideo(_ sender: UIButton)        回放慢動作影片與結果
+IBAction func replayVideo(_ sender: UIButton)        回放慢動作影片與預測結果
 
 ## ViewController.swift 主程式
 override func viewDidLoad() 程式進入點
