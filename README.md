@@ -33,10 +33,13 @@ override func viewDidLoad() 程式進入點
 
 #### @IBAction func recordButton(_ sender: Any)  
 功能 : 按錄影鍵後錄影開始
+
 #### self.videoPicker.gzipstream(file: self.tmpOutputURL)
-功能 : 影片POST到Server
+功能 : POST影片到Server
+
 #### fileOutput(...)
 功能 : 錄影完成後自動呼叫，之後儲存影片到相簿
+
 #### @IBAction func replayVideo(_ sender: UIButton)
 功能 : 回放慢動作影片與結果
 
@@ -44,6 +47,7 @@ override func viewDidLoad() 程式進入點
 
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
 功能 : 點擊螢幕獲取對焦框位置
+  
 #### func focalSetting(touchX:CGFloat, touchY:CGFloat)
 功能 : 設定對焦框位置
   
@@ -51,12 +55,14 @@ override func viewDidLoad() 程式進入點
   
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
 功能 : 計算校正參數
+  
 #### @IBAction func sendParameter(_ sender: UIButton) 
 功能 : 傳送校正參數到Server
   
 ## VideoPicker.swift
 
 #### jsonPost_parameter(height: Float?, length: Float?, completion: @escaping () -> ())
-功能 : Post校正參數到Server
+功能 : POST校正參數到Server
+  
 #### gzipstream(file : URL?, completion: @escaping() -> ())
-功能 : Post影片到Server  
+功能 : POST影片到Server  
