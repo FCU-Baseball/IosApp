@@ -66,3 +66,6 @@ override func viewDidLoad() 程式進入點
   
 #### gzipstream(file : URL?, completion: @escaping() -> ())
 功能 : POST影片到Server  
+  
+## DeviceInput.swift
+取得相機、麥克風
