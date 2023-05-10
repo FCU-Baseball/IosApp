@@ -1,12 +1,14 @@
-# IosApp  主程式 ViewController.swift
+# IosApp
 IBAction func recordButton(_ sender: Any)            按錄影鍵後錄影開始
+
 self.videoPicker.gzipstream(file: self.tmpOutputURL) 影片POST到Server
+
 IBAction func replayVideo(_ sender: UIButton)        回放慢動作影片與結果
 
-## ViewController.swift
+## ViewController.swift 主程式
 override func viewDidLoad() 程式進入點
 
-### 相機初始化
+### 相機初始化 
 #### settingPreviewLayer()
 功能 : 設定預覽錄影畫面
 
@@ -18,6 +20,7 @@ override func viewDidLoad() 程式進入點
 
 #### @IBAction func ServerInput(_ sender: Any)
 功能 : 手動輸入Server IP
+
 
 ### 模式切換
 #### @IBAction func predModeClicked(_ sender: UISegmentedControl) 
@@ -47,13 +50,13 @@ override func viewDidLoad() 程式進入點
 ### 球速額外使用函式
   
 #### override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
-功能 :　計算校正參數
+功能 : 計算校正參數
 #### @IBAction func sendParameter(_ sender: UIButton) 
 功能 : 傳送校正參數到Server
   
 ## VideoPicker.swift
 
-### jsonPost_parameter
-功能 :　Post校正參數到Server
-### gzipstream
+#### jsonPost_parameter
+功能 : Post校正參數到Server
+#### gzipstream
 功能 : Post影片到Server  
